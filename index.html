@@ -166,6 +166,13 @@
 
     resetDeck()
 
+    const handleRestart = () => {
+        count = 0
+        document.querySelector('#counter').innerHTML = count
+        document.querySelector('#card').innerHTML = 'Card'
+        resetDeck()
+    }
+
     handleClick = () => {
         const card = getRandomCard()
         let icon = ''
@@ -190,20 +197,20 @@
         if(count > 21){
             setTimeout(()=>{
                 alert("Você perdeu")
+                handleRestart()
             }, 100)
         }
+
         if(count === 21){
             setTimeout(()=>{
                 alert("Parabéns!! Você ganhou")
+                handleRestart()
             },100)
         }
     }
 
     handleEnd = () => {
-        count = 0
-        document.querySelector('#counter').innerHTML = count
-        document.querySelector('#card').innerHTML = 'Card'
-        resetDeck()
         alert("Você encerrou a aposta, fim de jogo")
+        handleRestart()
     }
 </script>
