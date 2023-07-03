@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>21 jogo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex items-center justify-center h-screen bg-no-repeat bg-cover bg-center" style="background-image: url('bg2.avif');">
+    <div class="flex gap-8 flex-col">
+        <h1 class="text-slate-50 text-xl font-bold text-center">Tire sua carta!</h1>
+        <span id="counter" class="w-full h-10 bg-green-950 text-center text-white flex items-center justify-center rounded-lg">
+            0
+        </span>
+        <div id="card" class="w-64 h-96 bg-red-800 rounded-lg flex items-center justify-center text-white">
+            Card
+        </div>
+        <div id="getCardButton" onclick="handleClick()" class="h-20 w-full bg-indigo-950 flex items-center justify-center text-white font-bold rounded-lg text-lg hover:bg-indigo-900 cursor-pointer">
+            <button >Tirar carta</button>
+        </div>
+        <div onclick="handleEnd()" class="h-10 w-full bg-red-900  flex items-center justify-center text-white font-bold rounded-lg text-lg hover:bg-red-950 cursor-pointer">
+            Encerrar aposta 
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    let deck = []
+    let count = 0
+
+    const shuffle = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+                ;[array[i], array[j]] = [array[j], array[i]]
+        }
+        return array
+    }
+
+    const randomNumber = (from, to) => {
+        return Math.floor(Math.random() * (to - from + 1)) + from
+    }
+
+    const clubCardCodes = [
+        'ca',
+        'c2',
+        'c3',
+        'c4',
+        'c5',
+        'c6',
+        'c7',
+        'c8',
+        'c9',
+        'c10',
+        'cj',
+        'cq',
+        'ck',
+    ]
+
+    const diamondCardCodes = [
+        'da',
+        'd2',
+        'd3',
+        'd4',
+        'd5',
+        'd6',
+        'd7',
+        'd8',
+        'd9',
+        'd10',
+        'dj',
+        'dq',
+        'dk',
+    ]
+
+    const heartCardCodes = [
+        'ha',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'h7',
+        'h8',
+        'h9',
+        'h10',
+        'hj',
+        'hq',
+        'hk',
+    ]
+
+    const spadeCardCodes = [
+        'sa',
+        's2',
+        's3',
+        's4',
+        's5',
+        's6',
+        's7',
+        's8',
+        's9',
+        's10',
+        'sj',
+        'sq',
+        'sk',
+    ]
+
+    const cardValuesEnum = [
+        { value: 1, label: 'A' },
+        { value: 2, label: '2' },
+        { value: 3, label: '3' },
+        { value: 4, label: '4' },
+        { value: 5, label: '5' },
+        { value: 6, label: '6' },
+        { value: 7, label: '7' },
+        { value: 8, label: '8' },
+        { value: 9, label: '9' },
+        { value: 10, label: '10' },
+        { value: 11, label: 'J' },
+        { value: 11, label: 'Q' },
+        { value: 11, label: 'K' },
+    ]
+
+    const cards = [
+        ...clubCardCodes.map((item, index) => ({
+            code: item,
+            suit: 'club',
+            value: index + 1,
+        })),
+        ...diamondCardCodes.map((item, index) => ({
+            code: item,
+            suit: 'diamond',
+            value: index + 1,
+        })),
+        ...heartCardCodes.map((item, index) => ({
+            code: item,
+            suit: 'heart',
+            value: index + 1,
+        })),
+        ...spadeCardCodes.map((item, index) => ({
+            code: item,
+            suit: 'spade',
+            value: index + 1,
+        })),
+    ]
+
+    const shuffleDeck = () => {
+        deck = shuffle(deck)
+    }
+
+    const resetDeck = () => {
+        deck = cards
+        shuffleDeck()
+    }
+
+    const getRandomCard = () => {
+        const newDeck = [...deck]
+        const position = randomNumber(0, newDeck.length - 1)
+        const card = newDeck.splice(position, 1)[0]
+        deck = newDeck
+        return card
+    }
+
+    resetDeck()
+
+    handleClick = () => {
+        const card = getRandomCard()
+        let icon = ''
+        count = count + card.value
+        switch(card.suit){
+            case 'club':
+                icon = '♣️'
+                break;
+            case 'diamond':
+                icon = '♦️'
+                break;
+            case 'spade':
+                icon = '♠️'
+                break;
+            case 'heart':
+                icon = '♥️'
+                break;
+        }
+        document.querySelector('#card').innerHTML = `${icon} ${card.value}`
+        document.querySelector('#counter').innerHTML = count
+
+        if(count > 21){
+            setTimeout(()=>{
+                alert("Você perdeu")
+            }, 100)
+        }
+        if(count === 21){
+            setTimeout(()=>{
+                alert("Parabéns!! Você ganhou")
+            },100)
+        }
+    }
+
+    handleEnd = () => {
+        count = 0
+        document.querySelector('#counter').innerHTML = count
+        document.querySelector('#card').innerHTML = 'Card'
+        resetDeck()
+        alert("Você encerrou a aposta, fim de jogo")
+    }
+</script>
